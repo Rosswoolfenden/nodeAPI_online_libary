@@ -1,0 +1,21 @@
+{
+  "name": "304cem_backend_public_libary_cw",
+  "version": "1.0.0",
+  "description": "Ross Woolfenden's (7955723) 304CEM Coursework. Client 2 – Public Library: A Book Lending Web App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.coventry.ac.uk/304CEM-2021SEPJAN/304CEM_Backend_Public_Libary_Cw.git"
+  },
+  "author": "Ross Callum Woolfenden",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^9.4.0",
+    "winston": "^3.3.3"
+  }
+}

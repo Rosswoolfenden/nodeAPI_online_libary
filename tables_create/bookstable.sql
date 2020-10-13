@@ -1,4 +1,4 @@
-CREATE TABLE books (
+CREATE TABLE IF NOT EXISTS bookssss (
     ID INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(32),
     rating INT,
@@ -10,4 +10,4 @@ CREATE TABLE books (
     imageURL VARCHAR(2048),
     status VARCHAR(32),
     PRIMARY KEY(ID)
-)
+);

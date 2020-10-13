@@ -1,8 +1,8 @@
-CREATE TABLE user_books(
+CREATE TABLE IF NOT EXISTS user_books(
     ID INT NOT NULL AUTO_INCREMENT,
     ownerId INT NOT NULL,
     bookId INT NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (ownerId) REFERENCES users(ID),
     FOREIGN KEY (bookId) REFERENCES books(ID)
-)
+);

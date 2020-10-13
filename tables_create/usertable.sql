@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     ID INT NOT NULL AUTO_INCREMENT,
     firstName VARCHAR(32),  
     lastName VARCHAR(32),
@@ -12,4 +12,4 @@ CREATE TABLE users (
     adress TEXT,
     ownedBooks int,
     PRIMARY KEY (ID)
-)
+);

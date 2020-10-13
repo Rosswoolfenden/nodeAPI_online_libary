@@ -19,11 +19,9 @@ async function createBooksTable(rootdir){
 async function createUserTable(rootdir) {
    const sql = fs.readFileSync(rootdir + '/tables_create/usertable.sql').toString();
    const result = await mariadb.sqlquery(sql, null);
-   log.info({'The result is' : JSON.stringify(result)});
 }
 
 async function createUserBookTable(rootdir){
    const sql = fs.readFileSync(rootdir + '/tables_create/ownedBooks.sql').toString();
    const result = await mariadb.sqlquery(sql, null);
-   log.info({'The result is' : JSON.stringify(result)});
 }

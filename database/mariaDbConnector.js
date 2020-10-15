@@ -10,12 +10,13 @@ const pool = mariadb.createPool(config.mariadb);
 
 // function to query mariadb database;
 exports.sqlquery = async (q, params) => {
+    console.log(params)
     let connection;
     try{
         connection = await pool.getConnection();
         const res = await connection.query(q, params);
         return res;
-    } catch(e) {
+    } catch(e) { 
         const errorId = uuidv4();
         log.error(Date.now(), errorId, )
         throw new DatabaseExeption('Database Error', e.code, errorId);

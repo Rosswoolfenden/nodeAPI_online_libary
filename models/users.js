@@ -7,19 +7,21 @@ const log = logging.createLogger('User Model');
 
 exports.registerUser =  async(body) => {
     try {
-        log.info(body.email);
-        log.info(body.password);
-        const keys =  Object.keys(body);
-        const vals = Object.values(body); 
-        const params = [keys, vals];
+       // console.log(body);
         const hashpass = bcrypt.hashSync(body.password, 10);
         body.password = hashpass;
-        const q = 'INSERT INTO users ? VALUES ?';
-        const result = await mariadb.sqlquery(q,params );
-        console.log(JSON.stringify(result));
-        return true;
+        const q = "INSERT INTO users SET ?";
+        const result = await mariadb.sqlquery(q, body);
+        if(result.affectedRows) {
+            
+            return {ID: result.insertId, success: true, ctxstatus: 201};
+        } else {
+            return false;
+        }
+        
     } catch (e) {
-        console.log(e);
+        log.error(e);
+        return {Error: e}
     }
     
 }

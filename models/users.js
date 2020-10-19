@@ -20,7 +20,7 @@ exports.registerUser =  async(body) => {
         }
         
     } catch (e) {
-        log.error(e);
+        log.error(e.toString());
         return {Error: e}
     }
     

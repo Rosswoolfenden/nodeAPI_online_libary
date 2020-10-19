@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+  
+      
+      "user": {
+        "$id": "#user",
+        "title": "User",
+        "description": "Feilds needed to register new users.",
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "description": "User's First name",
+            "type": "string"
+          },
+          "lastName": {
+            "description": " User's Last name",
+            "type": "string"
+          },
+          "about": {
+            "description": "User's Description of themselves",
+            "type": "string"
+          },
+          "email": {
+            "description": "User's email address (must be beskpoke)",
+            "type": "string",
+            "format": "email"
+          },
+          "avatarURL": {
+            "description": "URL of profile image",
+            "type": "string",
+            "format": "uri"
+          },
+          "username": {
+            "description": "User's username (must be beskpoke) ",
+            "type": "string",
+            "minLength": 3
+          },
+          "password": {
+            "description": "Users Password",
+            "type": "string",
+            "minLength": 6
+          }
+        },
+        "required": ["username", "email", "password"],
+        "additionalProperties": false
+      } 
+    } 
+}

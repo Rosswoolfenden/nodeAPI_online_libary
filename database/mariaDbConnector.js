@@ -1,24 +1,19 @@
 const config = require('../config');
 const logger = require('../logging/WinstonLogging');
-const mariadb = require ('mariadb');
+const db = require('promise-mysql'); 
 const log = logger.createLogger('SQL connector');
 const { v4: uuidv4 } = require('uuid');
 
-// gets maria db pool from config;
-const pool = mariadb.createPool(config.mariadb);
-
-
 // function to query mariadb database;
-exports.sqlquery = async (q, params) => {
-    console.log(params)
+exports.sqlquery = async (query, params) => {
     let connection;
     try{
-        connection = await pool.getConnection();
-        const res = await connection.query(q, params);
+        const connection = await db.createConnection(config.mariadb);
+        const res = await connection.query(query, params);
         return res;
     } catch(e) { 
         const errorId = uuidv4();
-        log.error(Date.now(), errorId, )
+        log.error(Date.now(), errorId, e )
         throw new DatabaseExeption('Database Error', e.code, errorId);
     } finally {
         if(connection) {

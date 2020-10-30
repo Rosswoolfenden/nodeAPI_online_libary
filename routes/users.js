@@ -56,7 +56,8 @@ async function getAllUsers(ctx) {
             ctx.status = 403;
             ctx.body = {Error: 'You do not have permissions to complete this action'}
         } else {
-            ctx.body = {Success: ctx.state.user.role}
+            
+            ctx.body = await model.getAllUsers()
         }
 
     }catch(e){

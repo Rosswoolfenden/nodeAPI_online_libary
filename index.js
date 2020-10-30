@@ -7,7 +7,6 @@ const logging = require('./logging/WinstonLogging');
 const db = require('./database/mariaDbConnector');
 const app = new Koa();
 const log = logging.createLogger('Server');
-
 const port = config.info.port;
 
 async function checkdbconnection() {
@@ -25,7 +24,7 @@ checkdbconnection();
 
 
 app.use(books.routes())
-app.use(admin.routes());999
+app.use(admin.routes());
 app.use(user.routes());
 
 

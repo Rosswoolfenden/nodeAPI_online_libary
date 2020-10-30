@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
     avatarURL VARCHAR(64),
     adress TEXT,
     ownedBooks int,
+    role VARCHAR(32) DEFAULT "basic",
     PRIMARY KEY (ID)
 );

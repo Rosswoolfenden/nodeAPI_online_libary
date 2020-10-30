@@ -12,16 +12,29 @@ const passMatch = function(dbpassword, inpassword) {
 
 const BasicStrategycb = async(username, password, done) => {   //done is error or results
     let user;
+
+    try {
+        user = await model.findByUsernmae(username);
+        if(!user) {
+            log.info('user does not exist');
+            return done(null, false);
+        }
+
+    } catch(e) {
+        log.error(`Errror : Failed to find ${username} in table`);
+        return done(e);
+    }
+
     try{
-        user = await model.findByUsernmae(username)
         if(passMatch(user.password, password)){
-            log.debug('Passwords match');
+            log.info('Passwords match');
             return done(null, user);
         } else {
-            return(null, false);
+            log.info("passowrds do not match ");
+            return done(null, false);
         }
-    } catch (e){
-        return done(error);
+    } catch(e){
+        return done(e);
     }
 }
 

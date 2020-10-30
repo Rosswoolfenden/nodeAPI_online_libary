@@ -14,7 +14,7 @@ const router = Router({prefix: '/api/v1/users'});
 router.post('/register', bodyParser(), validateUser, register);
 router.delete('/:id([0-9]{1,})', auth, removeUser);
 router.get('/', auth, login);
-router.get('/perm', auth ,getAllUsers)
+router.get('/getUsers', auth ,getAllUsers)
 
 
 async function register(ctx) {
@@ -37,15 +37,6 @@ async function login(ctx){
 }
 
 
-// async function getUser(ctx) {
-//     try {
-//         let user = await model.findByUsernmae('rosswoolfenden');
-//         ctx.body = user;
-//     } catch (e) {
-//         ctx.body = {err: e.toString()};
-//     }
-// }
-
 async function getAllUsers(ctx) {
     try {
 
@@ -67,14 +58,24 @@ async function getAllUsers(ctx) {
 
 
 async function removeUser(ctx) {
-    // to do auth to make sure user is the one delteing 
-    const userID = ctx.params.id;
-    const user = ctx.state.user;
-    log.info()
+    const user = ctx.state.user
+    const paramsID = ctx.params.id;
+    if(user.ID == paramsID) {
+        grant = 'deleteOwn';
+    } else {
+        grant = 'deleteAny';
+    }
     try {
+        const permisson = roles.can(user.role)[grant]('profile');
+        console.log(permisson);
+        if(!permisson.granted) {
+            ctx.status = 403;
+            ctx.body = {Error : 'You do not have permission'};
+        } else {
+            const res = await model.deleteUser(paramsID);
+            ctx.body =  res
+        }
         
-        const res = await model.deleteUser(userID);
-        ctx.body =  ({user : res});
     } catch (e) {
         log.error(e.toString());
         ctx.body = {Error: e.toString()};

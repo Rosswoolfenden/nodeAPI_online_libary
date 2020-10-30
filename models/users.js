@@ -26,21 +26,16 @@ exports.registerUser =  async(body) => {
 }
 
 exports.deleteUser = async(id) => {
-    try {
-        const user = await findById(id);
-        log.info(JSON.stringify(user));
-        return user;
-
-        // const query = 'DELETE FROM users WHERE ID = ?';
-        // const result = await mariadb.sqlquery(q, [user]);
-        // if (result.affectedRows) {
-        //     return ({ID: id, success: true});
-        // } else {
-        //     return ({ID: id, success: false});
-        // }
-    } catch(e){
-        log.error(JSON.stringify(e))
-        return e;
+    log.info(id);
+    // no need to check if user exist, as already been authirized by passport
+    const query = 'DELETE FROM users WHERE ID = ?';
+    const result = await mariadb.sqlquery(query, [id]);
+    if (result.affectedRows) {
+        log.info(`deleted user ${id}`);
+        return ({ID: id, success: true, message: `Sucsesfully deleted user ${id}`});
+    } else {
+        log.info(`deleted user ${id}`);
+        return ({ID: id, success: false, message: `Failed to deleted user ${id}`});
     }
 }
 

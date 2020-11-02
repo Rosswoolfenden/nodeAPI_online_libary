@@ -1,13 +1,14 @@
 
-const {Validator, ValidationError} = require('jsonschema');
+const {Validator, ValidationError, validate} = require('jsonschema');
 
 // const articleSchema = require('../schemas/article.json').definitions.article;
 // const categorySchema = require('../schemas/category.json').definitions.category;
 // const commentSchema = require('../schemas/comment.json').definitions.comment;
 
-
-const userSchema = require('../schema/users.json').definitions.user;
-// const userUpdateSchema = require('../schemas/user.json').definitions.userUpdate;
+const logger = require('../logging/WinstonLogging');
+const user = require('../schema/users.json').definitions.user;
+const userUpdate = require('../schema/users.json').definitions.userUpdate;
+const log = logger.createLogger('Validation');
 
 const makeValidator = (schema, resource) => {
 
@@ -19,7 +20,7 @@ const makeValidator = (schema, resource) => {
   
 
   const handler = async (ctx, next) => {
- 
+    log.debug('validating');
     const body = ctx.request.body;
 
     try {
@@ -27,10 +28,11 @@ const makeValidator = (schema, resource) => {
       await next();
     } catch (error) {
       if (error instanceof ValidationError) {
-        console.error(error);
+        log.error(error);
         ctx.body = {message: error.stack};
         ctx.status = 400;      
-      } else {
+      } else { 
+        log.error(error);
         throw error;
       }
     }
@@ -38,4 +40,5 @@ const makeValidator = (schema, resource) => {
   return handler;
 }
 
-exports.validateUser = makeValidator(userSchema, 'user');
+exports.validateUser = makeValidator(user, 'user');
+exports.validateUpdate = makeValidator(userUpdate, 'userUpdate');

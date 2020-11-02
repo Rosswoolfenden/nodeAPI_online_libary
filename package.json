@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dbstart": "docker start mariadbdocker"
+    "dbstart": "docker start mariadbdocker",
+    "run": "nodemon index.js",
+    "deploy": "docker start mariadbdocker && node index.js"
   },
   "repository": {
     "type": "git",

@@ -40,6 +40,10 @@
             "description": "Users Password",
             "type": "string",
             "minLength": 6
+          },
+          "role": {
+            "description": "Users Roles admin/basic",
+            "type": "string"
           }
         },
         "required": ["username", "email", "password"],

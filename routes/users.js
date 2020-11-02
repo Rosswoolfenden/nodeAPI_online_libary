@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const logging = require('../logging/WinstonLogging');
 const model = require('../models/users');
-const {validateUser} = require('../controllers/validation');
+const {validateUser, validateUpdate} = require('../controllers/validation');
 const { roles } = require('../permissons/roles');
 const auth = require('../controllers/auth');
 
@@ -14,7 +14,8 @@ const router = Router({prefix: '/api/v1/users'});
 router.post('/register', bodyParser(), validateUser, register);
 router.delete('/:id([0-9]{1,})', auth, removeUser);
 router.get('/', auth, login);
-router.get('/getUsers', auth ,getAllUsers)
+router.get('/getAllUsers', auth ,getAllUsers);
+router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUser ,updateUser);
 
 
 async function register(ctx) {
@@ -60,6 +61,7 @@ async function getAllUsers(ctx) {
 async function removeUser(ctx) {
     const user = ctx.state.user
     const paramsID = ctx.params.id;
+    let grant;
     if(user.ID == paramsID) {
         grant = 'deleteOwn';
     } else {
@@ -81,6 +83,26 @@ async function removeUser(ctx) {
         ctx.body = {Error: e.toString()};
     }
 }
-    
+
+async function updateUser(ctx) {
+    const newDetails = ctx.request.body; 
+    const user = ctx.state.user;
+    const paramsID = ctx.params.id; 
+    // if no id provided use own account id
+    let grant;
+    if(user.ID == paramsID) {
+        log.debug('User updating own account');
+        grant = 'updateOwn';
+    } else {
+        grant = 'updateAny';
+    }
+    try {
+        const res =  await model.updateUser(paramsID, newDetails);
+        ctx.body = res;
+    } catch(e) {
+        console.log(e)
+        ctx.body = {Error: 'Failed to update user, try again later'};
+    }
+}
 
 module.exports = router;

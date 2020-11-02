@@ -2,6 +2,8 @@ const mariadb = require('../database/mariaDbConnector');
 const logging = require('../logging/WinstonLogging');
 const bcrypt = require('bcrypt');
 const { stringify } = require('uuid');
+const { query } = require('winston');
+const { validateUpdate } = require('../controllers/validation');
 
 const log = logging.createLogger('User Model');
 
@@ -60,6 +62,24 @@ exports.getAllUsers = async() => {
     const query = 'SELECT * FROM users;'
     const result =  await mariadb.sqlquery(query, []);
     return result;
+}
+
+exports.updateUser = async(id, newDetails) => {
+    log.info('we are here');
+    const query = 'UPDATE users SET ? WHERE ID = ?'
+    console.log(newDetails);
+    //user might change details thats not their passowrd
+    if (newDetails.password != null) {
+        log.info('changing password - re hasing')
+        const hashPass = bcrypt.hashSync(newDetails.password, 10);
+        newDetails.password = hashPass;
+    }
+    const result = await mariadb.sqlquery(query, [newDetails, id]);
+    if(result.affectedRows){
+        return {ID: id, updated: true, message: 'Sucessfully updated profile'};
+    } else {
+        return {ID: id, updated: false,  message: 'Failed to update profile'};
+    };
 }
 
 

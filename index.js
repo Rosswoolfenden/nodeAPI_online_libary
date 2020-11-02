@@ -9,8 +9,10 @@ const app = new Koa();
 const log = logging.createLogger('Server');
 const port = config.info.port;
 
+
+// check the API can connect to the mariadb mysql database;
 async function checkdbconnection() {
-    try {
+    try { 
         const dbconnect = await db.sqlquery('SELECT 1 as val', null);
         log.info('Connected to database');
     } catch (e) {
@@ -23,7 +25,7 @@ async function checkdbconnection() {
 checkdbconnection();
 
 
-app.use(books.routes())
+app.use(books.routes());
 app.use(admin.routes());
 app.use(user.routes());
 

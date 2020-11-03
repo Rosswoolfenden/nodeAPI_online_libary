@@ -14,6 +14,7 @@ exports.sqlquery = async (query, params) => {
     } catch(e) { 
         const errorId = uuidv4();
         log.error(Date.now(), errorId, e )
+        log.error(e);
         throw new DatabaseExeption('Database Error', e.code, errorId);
     } finally {
         if(connection) {

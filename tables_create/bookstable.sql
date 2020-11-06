@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS bookssss (
+CREATE TABLE IF NOT EXISTS books (
     ID INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(32),
     rating INT,
@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS bookssss (
     ownerId INT,
     about TEXT,
     imageURL VARCHAR(2048),
-    status VARCHAR(32),
+    status VARCHAR(32) DEFAULT "available",
     PRIMARY KEY(ID)
 );

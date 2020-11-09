@@ -22,13 +22,12 @@ async function register(ctx) {
     const body = ctx.request.body;
     try {  
         const res = await model.registerUser(body);
-        console.log(res.ctxstatus);
         ctx.status = 201;
-        console.log(res);
+        
         ctx.body = res;
     } catch (e) {
         log.error({Error: e.toString()});
-        ctx.body = {err: 'user does not exits'};
+        ctx.body = {Error: 'Server Error, please try again'};
     }
 }
 
@@ -53,7 +52,7 @@ async function getAllUsers(ctx) {
         }
 
     }catch(e){
-        ctx.body = {Error: 'This did not work'};
+        ctx.body = {Error: 'Server Error, please try again'};
     }
 }
 
@@ -80,7 +79,7 @@ async function removeUser(ctx) {
         
     } catch (e) {
         log.error(e.toString());
-        ctx.body = {Error: e.toString()};
+        ctx.body = {Error: 'Server Error, please try again laters'};
     }
 }
 
@@ -97,8 +96,15 @@ async function updateUser(ctx) {
         grant = 'updateAny';
     }
     try {
-        const res =  await model.updateUser(paramsID, newDetails);
-        ctx.body = res;
+        const permisson = roles.can(user.role)[grant]('profile');
+        console.log(permisson);
+        if(!permisson.granted) {
+            log.info('Not granted permisson')
+            ctx.body = {Error: 'You do not have permissions to complete this action'}
+        } else {
+            const res =  await model.updateUser(paramsID, newDetails);
+            ctx.body = res;
+        }
     } catch(e) {
         console.log(e)
         ctx.body = {Error: 'Failed to update user, try again later'};

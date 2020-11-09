@@ -15,8 +15,8 @@ exports.registerUser =  async(body) => {
         const q = 'INSERT INTO users SET ?';
         const result = await mariadb.sqlquery(q, body);
         if(result.affectedRows) {
-            
-            return {ID: result.insertId, success: true, ctxstatus: 201};
+            log.info('succesfully added user')
+            return {ID: result.insertId, success: true, message: `succsefully registered user ${result.insertId}`, ctxstatus: 201};
         } else {
             return false;
         }

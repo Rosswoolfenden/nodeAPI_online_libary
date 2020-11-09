@@ -9,7 +9,8 @@ const log = logging.createLogger('Books Route');
 const router = Router({prefix: '/api/v1/books'});
 
 router.post('/add', auth, bodyParser(), validateBook, addBook);
-router.get('/', getAllBooks);
+router.get('/', auth, getAllBooks);
+router.get('/:id([0-9]{1,})', auth, getBookById);
 
 async function getAllBooks(ctx) {
     log.info(' i have been called');
@@ -50,8 +51,14 @@ async function getByCategory (ctx) {
 
 
 async function getBookById(ctx) {
-    log.info('i have been called ');
-    ctx.body = {sucsess: 'this api call worked'};
+    const bookId = ctx.params.id;
+    try {
+        let res = await model.getId(bookId);
+        ctx.body = res;
+
+    } catch(e) {
+        ctx.body = {Error : 'Failed to get book, try again later'};
+    }
 }
 
 module.exports = router;

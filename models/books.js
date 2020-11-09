@@ -22,5 +22,7 @@ exports.getAll = async() => {
 }
 
 exports.getId = async(bookId) => {
-    
+    const q = 'SELECT * FROM books WHERE ID = ?'
+    const result = await mariadb.sqlquery(q, [bookId]);
+    return result;
 }

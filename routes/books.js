@@ -27,6 +27,17 @@ async function addBook(ctx) {
         ctx.body = {Error: 'Server error, try again later'};
     }
 }
+
+async function getAllBooks(ctx) {
+    try {
+        let res = await model.getAll();
+        ctx.body = res;
+
+    } catch(e){
+        log.error(e);
+        ctx.body = {Error: 'Failed to compelte action'}
+    }
+}
 async function getByCategory (ctx) {
     const category = ctx.body.category;
     try {

@@ -15,7 +15,12 @@ exports.addBook = async (book) => {
     }
 }
 
-// exports.getAll = async() => {
-//     const q = 'SELECT * FROM books';
-//     const result = await 
-// }
+exports.getAll = async() => {
+    const q = 'SELECT * FROM books';
+    const result = await mariadb.sqlquery(q, null);
+    return result; 
+}
+
+exports.getId = async(bookId) => {
+    
+}

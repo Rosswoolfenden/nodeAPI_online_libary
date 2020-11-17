@@ -57,8 +57,9 @@ async function getBookById(ctx) {
 async function deleteBook(ctx) {
     const user = ctx.state.user;
     const book = ctx.params.id;
+    ctx.body = user;
     try {
-        res = await model.delBook(book, user.ID);
+        res = await model.delBook(book, user);
         ctx.body = res;
     } catch(e){
         log.error(e);

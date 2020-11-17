@@ -4,6 +4,7 @@ const logging = require('../logging/WinstonLogging');
 const auth = require('../controllers/auth');
 const {validateBook} = require('../controllers/validation');
 const model =  require('../models/books');
+const { roles } = require('../permissons/roles');
 
 const log = logging.createLogger('Books Route');
 const router = Router({prefix: '/api/v1/books'});
@@ -11,6 +12,7 @@ const router = Router({prefix: '/api/v1/books'});
 router.post('/add', auth, bodyParser(), validateBook, addBook);
 router.get('/', auth, getAllBooks);
 router.get('/:id([0-9]{1,})', auth, getBookById);
+router.delete('/:id([0-9]{1,})', auth, deleteBook);
 
 async function getAllBooks(ctx) {
     log.info(' i have been called');
@@ -39,15 +41,6 @@ async function getAllBooks(ctx) {
         ctx.body = {Error: 'Failed to compelte action'}
     }
 }
-async function getByCategory (ctx) {
-    const category = ctx.body.category;
-    try {
-        ctx.body = {sucsess: category};
-
-    } catch (e) {
-        ctx.body = {Error: 'Server error, try again later'};
-    }
-}
 
 
 async function getBookById(ctx) {
@@ -61,4 +54,15 @@ async function getBookById(ctx) {
     }
 }
 
+async function deleteBook(ctx) {
+    const user = ctx.state.user;
+    const book = ctx.params.id;
+    try {
+        res = await model.delBook(book, user.ID);
+        ctx.body = res;
+    } catch(e){
+        log.error(e);
+        ctx.body = {Error: 'Failed to delete book, try again'};
+    }
+}
 module.exports = router;

@@ -13,11 +13,8 @@ router.post('/add', auth, bodyParser(), validateBook, addBook);
 router.get('/', auth, getAllBooks);
 router.get('/:id([0-9]{1,})', auth, getBookById);
 router.delete('/:id([0-9]{1,})', auth, deleteBook);
+router.put('/:id([0-9]{1,})', auth, bodyParser(), validateBook, updateBook );
 
-async function getAllBooks(ctx) {
-    log.info(' i have been called');
-    ctx.body = {sucsess: 'The API call worked, well done '};
-}
 
 async function addBook(ctx) {
     const book = ctx.request.body;
@@ -64,6 +61,22 @@ async function deleteBook(ctx) {
     } catch(e){
         log.error(e);
         ctx.body = {Error: 'Failed to delete book, try again'};
+    }
+}
+
+async function updateBook(ctx) {
+    const user =  ctx.state.user;
+    const bookID = ctx.params.id;
+    const updatedBook = ctx.request.body;
+    updatedBook.ID = bookID;
+
+    try {
+        res = await model.updateBook(updatedBook, user);
+        ctx.body = res;
+
+    } catch(e) {
+        log.error(e);
+        ctx.body = {Error: 'Failed to update book, try again'};
     }
 }
 module.exports = router;

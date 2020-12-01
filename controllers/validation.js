@@ -8,8 +8,7 @@ const userUpdate = require('../schema/users.json').definitions.userUpdate;
 const log = logger.createLogger('Validation');
 
 const makeValidator = (schema, resource) => {
-  log.info(schema);
-  log.info(resource);
+  log.info('recourse is ' + resource);
   const v = new Validator();
   const validationOptions = {
     throwError: true,
@@ -18,9 +17,8 @@ const makeValidator = (schema, resource) => {
   
 
   const handler = async (ctx, next) => {
-    log.debug('validating');
     const body = ctx.request.body;
-
+    console.log(body);
     try {
       v.validate(body, schema, validationOptions);
       await next();

@@ -12,6 +12,10 @@
             "description": "Main title of book",
             "type": "string"
           },
+          "isbn": {
+            "description": "The unique identifying number of a number",
+            "type": "integer"
+          },
           "rating": {
             "description": "The book rating",
             "type": "integer",
@@ -37,6 +41,14 @@
           "status": {
               "description": "Whether the book is available ",
               "type" : "string"
+          },
+          "genre": {
+            "description": "The books genre",
+            "type": "string"
+          },
+          "author": {
+            "description": "The writer of the book",
+            "type": "string"
           }
         },
         "required": ["title"],

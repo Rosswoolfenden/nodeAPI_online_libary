@@ -44,6 +44,10 @@
           "role": {
             "description": "Users Roles admin/basic",
             "type": "string"
+          },
+          "adress": {
+            "description": "Users postal adress to post books",
+            "type": "string"
           }
         },
         "required": ["username", "email", "password"],

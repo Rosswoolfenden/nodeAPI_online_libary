@@ -24,6 +24,14 @@ async function checkdbconnection() {
 // test connection with mariadb database;
 checkdbconnection();
 
+app.use(async (ctx, next) => {
+    ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,append,delete,entries,foreach,get,has,keys,set,values,Authorizatio');
+    ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    ctx.response.status = 200;
+    await next();
+  });
+
 
 app.use(books.routes());
 app.use(admin.routes());

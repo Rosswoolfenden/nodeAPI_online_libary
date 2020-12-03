@@ -22,10 +22,9 @@ async function register(ctx) {
     const body = ctx.request.body;
     try {  
         const res = await model.registerUser(body);
-        if(!res.ID) {
-            log.info("res has no ID");
+        if(!res.ID) { 
             ctx.status = 409;
-            ctx.body = res
+            
         } else {
             ctx.status = 201;
             ctx.body = res;

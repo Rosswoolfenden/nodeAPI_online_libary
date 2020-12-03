@@ -7,19 +7,23 @@ const { validateUpdate } = require('../controllers/validation');
 
 const log = logging.createLogger('User Model');
 
+
 exports.registerUser =  async(body) => {
+    try {
        // console.log(body);
-    const hashpass = bcrypt.hashSync(body.password, 10);
-    body.password = hashpass;
-    const q = 'INSERT INTO users SET ?';
-    const result = await mariadb.sqlquery(q, body);
-    if(result.affectedRows) {
-        log.info('succesfully added user')
-        return {ID: result.insertId, success: true, message: `succsefully registered user ${result.insertId}`, ctxstatus: 201};
-    } else {
-        return false;
+        const hashpass = bcrypt.hashSync(body.password, 10);
+        body.password = hashpass;
+        const q = 'INSERT INTO users SET ?';
+        const result = await mariadb.sqlquery(q, body);
+        if(result.affectedRows) {
+            log.info('succesfully added user')
+            return {ID: result.insertId, success: true, message: `succsefully registered user ${result.insertId}`, ctxstatus: 201};
+        } 
+        
+    } catch (e) {
+        log.error(e.toString());
+        return {Error: e}
     }
-    
 }
 
 exports.deleteUser = async(id) => {

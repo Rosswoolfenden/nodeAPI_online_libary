@@ -8,23 +8,18 @@ const { validateUpdate } = require('../controllers/validation');
 const log = logging.createLogger('User Model');
 
 exports.registerUser =  async(body) => {
-    try {
        // console.log(body);
-        const hashpass = bcrypt.hashSync(body.password, 10);
-        body.password = hashpass;
-        const q = 'INSERT INTO users SET ?';
-        const result = await mariadb.sqlquery(q, body);
-        if(result.affectedRows) {
-            log.info('succesfully added user')
-            return {ID: result.insertId, success: true, message: `succsefully registered user ${result.insertId}`, ctxstatus: 201};
-        } else {
-            return false;
-        }
-        
-    } catch (e) {
-        log.error(e.toString());
-        return {Error: e}
+    const hashpass = bcrypt.hashSync(body.password, 10);
+    body.password = hashpass;
+    const q = 'INSERT INTO users SET ?';
+    const result = await mariadb.sqlquery(q, body);
+    if(result.affectedRows) {
+        log.info('succesfully added user')
+        return {ID: result.insertId, success: true, message: `succsefully registered user ${result.insertId}`, ctxstatus: 201};
+    } else {
+        return false;
     }
+    
 }
 
 exports.deleteUser = async(id) => {
@@ -42,7 +37,7 @@ exports.deleteUser = async(id) => {
 }
 
 exports.findByUsernmae = async(username) => {
-    try {
+        
     const query = 'SELECT * FROM users WHERE username = ?;';
         const result = await mariadb.sqlquery(query, username);
         if(result.length === 1) {
@@ -51,11 +46,6 @@ exports.findByUsernmae = async(username) => {
             log.debug(username + ' does not exist in database');
             return false;
         }
-    } catch(e) {
-        console.log(e);
-        return e;
-
-    }
 }
 
 exports.getAllUsers = async() => {

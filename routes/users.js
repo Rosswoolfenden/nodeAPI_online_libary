@@ -22,6 +22,7 @@ async function register(ctx) {
     const body = ctx.request.body;
     try {  
         const res = await model.registerUser(body);
+        console.log(res);
         ctx.status = 201;
         
         ctx.body = res;

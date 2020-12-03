@@ -13,7 +13,7 @@ const router = Router({prefix: '/api/v1/users'});
 
 router.post('/register', bodyParser(), validateUser, register);
 router.delete('/:id([0-9]{1,})', auth, removeUser);
-router.get('/', auth, login);
+router.post('/', auth, login);
 router.get('/getAllUsers', auth ,getAllUsers);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUser ,updateUser);
 
@@ -38,7 +38,9 @@ async function register(ctx) {
 
 async function login(ctx){
     const user = ctx.state.user;
-    ctx.body = {Success: `Hello ${user.username} you have logged on`};
+    log.info(`${user.username} has logged in `);
+    ctx.status= 200;
+    ctx.body = {Success: true, User: user};
 }
 
 

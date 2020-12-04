@@ -6,9 +6,11 @@ const user = require('./routes/users');
 const logging = require('./logging/WinstonLogging');
 const db = require('./database/mariaDbConnector');
 const app = new Koa();
+const cors = require('@koa/cors');
 const log = logging.createLogger('Server');
 const port = config.info.port;
 
+app.use(cors());
 
 // check the API can connect to the mariadb mysql database;
 async function checkdbconnection() {
@@ -24,12 +26,6 @@ async function checkdbconnection() {
 // test connection with mariadb database;
 checkdbconnection();
 
-app.use(async (ctx, next) => {
-    ctx.set('Access-Control-Allow-Origin', '*');
-    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,append,delete,entries,foreach,get,has,keys,set,values,Authorizatio');
-    ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-    await next();
-  });
 
 
 app.use(books.routes());

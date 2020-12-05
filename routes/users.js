@@ -13,7 +13,7 @@ const router = Router({prefix: '/api/v1/users'});
 
 router.post('/register', bodyParser(), validateUser, register);
 router.delete('/:id([0-9]{1,})', auth, removeUser);
-router.post('/', auth, login);
+router.post('/', bodyParser(), auth, login);
 router.get('/getAllUsers', auth ,getAllUsers);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUser ,updateUser);
 

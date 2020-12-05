@@ -10,8 +10,11 @@ const passMatch = function(dbpassword, inpassword) {
     return match;
 }
 
-const BasicStrategycb = async(username, password, done) => {   //done is error or results
-    let user;
+const BasicStrategycb = async(username, password, done) => { 
+      //done is error or results
+    console.log(username);
+    console.log(password);
+      let user;
 
     try {
         user = await model.findByUsernmae(username);

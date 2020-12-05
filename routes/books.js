@@ -10,7 +10,7 @@ const log = logging.createLogger('Books Route');
 const router = Router({prefix: '/api/v1/books'});
 
 router.post('/add', auth, bodyParser(), validateBook, addBook);
-router.get('/', auth, getAllBooks);
+router.get('/', getAllBooks);
 router.get('/:id([0-9]{1,})', auth, getBookById);
 router.delete('/:id([0-9]{1,})', auth, deleteBook);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateBook, updateBook );

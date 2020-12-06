@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+  
+      
+      "user": {
+        "$id": "$messages",
+        "title": "Messages",
+        "description": "Feilds needed to request book and message.",
+        "type": "object",
+        "properties": {
+          "ownerId": {
+            "description": "ID of the book owner ",
+            "type": "integer"
+          },
+          "requesterId": {
+            "description": "User id of requester id",
+            "type": "integer"
+          },
+          "msg": {
+            "description": "The messages sent",
+            "type": "string",
+          },
+          "chatId" : {
+            "description": "The chat id",
+            "type" : "integer"
+            },
+        "required": ["ownerId", "requesterId", "chatId"],
+        "additionalProperties": false
+      } 
+    } 
+}

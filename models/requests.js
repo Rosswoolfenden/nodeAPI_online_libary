@@ -33,6 +33,14 @@ exports.bookRequest = async (details) => {
     // 
 }
 
-async function checkAvailability(bookID) {
-    
+exports.getRequests = async(details) => {
+    const query = "SELECT * FROM messages WHERE ownerId = ? AND requesterId = ?";
+    const params = [details.ownerId, details.requesterId];
+    const result = await mariadb.sqlquery(query, params);
+    return result;
+
+} 
+
+exports.getSent = (details) => {
+    // const
 }

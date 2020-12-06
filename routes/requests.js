@@ -11,7 +11,8 @@ const { roles } = require('../permissons/roles');
 const log = logging.createLogger('Requests Route');
 const router = Router({prefix: '/api/v1/requests'});
 
-router.get('/', getMessages);
+router.get('/getRequests/:id([0-9]{1,})', auth, getRequests);
+router.get('/getSent/:id([0-9]{1,})', auth, getSentRequests);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
 router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 
@@ -33,7 +34,7 @@ async function requestBook(ctx) {
     try {
         const res = await model.bookRequest(requestDetails);
         if(res) {
-            ctx.status = 200;
+            ctx.status = 201;
             ctx.body = res;
         } else {
             ctx.status = 400;
@@ -53,11 +54,29 @@ async function requestBook(ctx) {
 }
 
 async function sendMessage(ctx){
-    //  send meesages to person
+    
 
-    // get chat id
+}
 
-    // add message with that chat id
+async function getRequests(ctx) {
+    const user =  ctx.state.user;
+    const chatDetails ={};
+    chatDetails.requesterId = ctx.params.id;
+    chatDetails.ownerId = user.ID;
+
+    log.info(chatDetails);
+    try {
+        const res = await model.getRequests(chatDetails);
+        ctx.status = 200;
+        ctx.body = res;
+    } catch(e) {
+        log.error(e);
+        ctx.status = 400;
+
+    }
+} 
+
+async function getSentRequests(ctx) {
 
 }
 

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS messages(
     ownerId INT NOT NULL,
     requesterId INT NOT NULL,
     bookId INT NOT NULL,
+    chatId INT NOT NULL,
     msg VARCHAR(1000), 
     PRIMARY KEY (ID),
     FOREIGN KEY (ownerId) REFERENCES users(ID),

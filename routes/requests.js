@@ -3,6 +3,7 @@ const bodyParser = require('koa-bodyparser');
 const logging = require('../logging/WinstonLogging');
 const auth = require('../controllers/auth');
 const {validateRequestMsg} = require('../controllers/validation');
+const model = require('../models/requests');
 const { roles } = require('../permissons/roles');
 
 // validateRequestMsg
@@ -10,26 +11,29 @@ const { roles } = require('../permissons/roles');
 const log = logging.createLogger('Requests Route');
 const router = Router({prefix: '/api/v1/requests'});
 
-router.get('/', auth, getMessages);
-router.post('/sendRequest', auth,  validateRequestMsg, requestBook);
+router.get('/', getMessages);
+router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
 router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 
 // get all of users messages
 async function getMessages(ctx) {
-    // get all meesages from a person
-    const user = ctx.state.user;
-    
+    // // get all meesages from a person
+    // const user = ctx.state.user;
+    ctx.body = "YAY"
+
 
 }
 
 // DB -     chatid - bookid - userid -  message 
 
 async function requestBook(ctx) {
-    
     const user =  ctx.state.user;
-    const requestDetails = ctx.request.body
+    const requestDetails = ctx.request.body;
+    requestDetails.requesterId = user.ID;
     try {
+        const res = await model.bookRequest(requestDetails)
         ctx.status = 200;
+        ctx.body = res;
 
     } catch (e) {
         ctx.status = 500;

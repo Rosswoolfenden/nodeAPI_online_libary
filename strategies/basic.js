@@ -11,9 +11,6 @@ const passMatch = function(dbpassword, inpassword) {
 }
 
 const BasicStrategycb = async(username, password, done) => { 
-      //done is error or results
-    console.log(username);
-    console.log(password);
       let user;
 
     try {

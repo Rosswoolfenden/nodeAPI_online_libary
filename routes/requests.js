@@ -17,12 +17,24 @@ router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 // get all of users messages
 async function getMessages(ctx) {
     // get all meesages from a person
+    const user = ctx.state.user;
+    
 
 }
 
 // DB -     chatid - bookid - userid -  message 
 
 async function requestBook(ctx) {
+    
+    const user =  ctx.state.user;
+    const requestDetails = ctx.request.body
+    try {
+        ctx.status = 200;
+
+    } catch (e) {
+        ctx.status = 500;
+        log.error(e);
+    }
     // get message 
 
     // create new chat id

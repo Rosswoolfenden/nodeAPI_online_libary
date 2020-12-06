@@ -3,10 +3,12 @@ const config = require('./config');
 const books = require('./routes/books');
 const admin = require('./routes/admin');
 const user = require('./routes/users');
+const requests = require('./routes/requests');
 const logging = require('./logging/WinstonLogging');
 const db = require('./database/mariaDbConnector');
 const app = new Koa();
 const cors = require('@koa/cors');
+const router = require('./routes/books');
 const log = logging.createLogger('Server');
 const port = config.info.port;
 
@@ -31,6 +33,7 @@ checkdbconnection();
 app.use(books.routes());
 app.use(admin.routes());
 app.use(user.routes());
+app.use(requests.routes());
 
 
 app.listen(port, () => log.info(`Public libary Api is now running on port ${port}`));

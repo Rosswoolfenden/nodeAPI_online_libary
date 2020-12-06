@@ -67,8 +67,14 @@ async function getRequests(ctx) {
     log.info(chatDetails);
     try {
         const res = await model.getRequests(chatDetails);
-        ctx.status = 200;
-        ctx.body = res;
+        if(!res) {
+            ctx.status = 400;
+            ctx.body = {Error: "Not chat available"}
+        } else {
+            ctx.status = 200;
+            ctx.body = res;
+        }
+        
     } catch(e) {
         log.error(e);
         ctx.status = 400;

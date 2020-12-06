@@ -42,10 +42,16 @@ exports.getRequests = async(details) => {
     } else {
         return result;
     }
-    
 
 } 
 
-exports.getSent = (details) => {
-    // const
+exports.getSent = async(details) => {
+    const query = "SELECT * FROM messages WHERE requesterId = ? AND ownerId = ?";
+    const params = [details.ownerId, details.requesterId];
+    const result = await mariadb.sqlquery(query, params);
+    if(!result.length) {
+        return;
+    } else {
+        return result;
+    }
 }

@@ -83,7 +83,25 @@ async function getRequests(ctx) {
 } 
 
 async function getSentRequests(ctx) {
+    const user =  ctx.state.user;
+    const chatDetails ={};
+    chatDetails.ownerId = ctx.params.id;
+    chatDetails.requesterId = user.ID;
+    try {
+        const res = await model.getSent(chatDetails);
+        if(!res) {
+            ctx.status = 400;
+            ctx.body = {Error: "Not chat available"}
+        } else {
+            ctx.status = 200;
+            ctx.body = res;
+        }
+        
+    } catch(e) {
+        log.error(e);
+        ctx.status = 400;
 
+    }
 }
 
 

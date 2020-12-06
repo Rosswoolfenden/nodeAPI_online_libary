@@ -1,3 +1,4 @@
+const { ParamName } = require('koa-router');
 const mariadb = require('../database/mariaDbConnector');
 const logging = require('../logging/WinstonLogging');
 const { roles } = require('../permissons/roles');
@@ -83,7 +84,12 @@ exports.updateBook = async(updatedBook, user) => {
     } else {
         return({success: false, ID: updatedBook.ID, message: `Failed to update book ID : ${updatedBook.ID}`});
     }
+}
 
-
+exports.updateStatus = async(bookid, newStatus) => {
+    const query = "UPDATE books SET status = ? WHERE ID = ?";
+    const params = [newStatus, bookid];
+    const result =  await mariadb.sqlquery(query, params);
+    return result;
 }
 

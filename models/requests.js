@@ -55,3 +55,14 @@ exports.getSent = async(details) => {
         return result;
     }
 }
+
+exports.respond =  async(bookid) => {
+    const updatestatus = await book.updateStatus("on loan", bookid);
+    if(!updatestatus.affectedRows) {
+        log.error("Failed to update status");
+        return;
+    }
+
+    // get user adress 
+
+}

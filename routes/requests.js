@@ -15,12 +15,19 @@ router.get('/getRequests/:id([0-9]{1,})', auth, getRequests);
 router.get('/getSent/:id([0-9]{1,})', auth, getSentRequests);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
 router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
+router.post('/respondRequest', auth, bodyParser(), respondToRequest);
 
 // get all of users messages
-async function getMessages(ctx) {
-    // // get all meesages from a person
-    // const user = ctx.state.user;
-    ctx.body = "YAY"
+async function respondToRequest(ctx) {
+    const user =  ctx.state.user;
+    const body = ctx.request.body;
+    try {
+        ctx.status = 201;
+        ctx.body = "YAT this workeds";
+    } catch(e) {
+        log.error(e);
+        ctx.status = 400;
+    }
 
 
 }
@@ -46,11 +53,6 @@ async function requestBook(ctx) {
         ctx.status = 400;
         log.error(e);
     }
-    // get message 
-
-    // create new chat id
-
-    // add message with chat id
 }
 
 async function sendMessage(ctx){
@@ -71,7 +73,7 @@ async function getRequests(ctx) {
             ctx.status = 400;
             ctx.body = {Error: "Not chat available"}
         } else {
-            ctx.status = 200;
+            ctx.status = 201;
             ctx.body = res;
         }
         
@@ -93,7 +95,7 @@ async function getSentRequests(ctx) {
             ctx.status = 400;
             ctx.body = {Error: "Not chat available"}
         } else {
-            ctx.status = 200;
+            ctx.status = 201;
             ctx.body = res;
         }
         

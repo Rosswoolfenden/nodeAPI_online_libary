@@ -60,7 +60,7 @@ exports.getAllUsers = async() => {
 
 exports.updateUser = async(id, newDetails) => {
     log.info('we are here');
-    const query = 'UPDATE users SET ? WHERE ID = ?'
+    const query = 'UPDATE users SET ? WHERE ID = ?;'
     console.log(newDetails);
     //user might change details thats not their passowrd
     if (newDetails.password != null) {
@@ -74,6 +74,13 @@ exports.updateUser = async(id, newDetails) => {
     } else {
         return {ID: id, updated: false,  message: 'Failed to update profile'};
     };
+}
+
+exports.getAdress = async(userId) => {
+    const query = 'SELECT * FROM users WHERE ID = ?';
+    const params = [userId];
+    const result = await mariadb.sqlquery(query, params);
+    return result;
 }
 
 

@@ -19,10 +19,16 @@ exports.bookRequest = async (details) => {
         // urn details;
     }
 
-    const query = 'INSERT INTO messages SET ?';
-    const result = mariadb.sqlquery(query, details);
-    return result;
 
+    const query = 'INSERT INTO messages SET ?';
+    const result =await mariadb.sqlquery(query, details);
+    console.log(result);
+    if(result.affectedRows) {
+        log.info("Sent message ");
+        return {Success: true, Message: "Book Request message sent"}
+    } else {
+        return;
+    }
 
     // 
 }

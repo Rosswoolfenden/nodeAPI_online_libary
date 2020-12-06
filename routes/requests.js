@@ -31,12 +31,18 @@ async function requestBook(ctx) {
     const requestDetails = ctx.request.body;
     requestDetails.requesterId = user.ID;
     try {
-        const res = await model.bookRequest(requestDetails)
-        ctx.status = 200;
-        ctx.body = res;
+        const res = await model.bookRequest(requestDetails);
+        if(res) {
+            ctx.status = 200;
+            ctx.body = res;
+        } else {
+            ctx.status = 400;
+            ctx.body = {Error: "Failed to send message"}
+        }
+        
 
     } catch (e) {
-        ctx.status = 500;
+        ctx.status = 400;
         log.error(e);
     }
     // get message 

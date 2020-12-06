@@ -4,6 +4,7 @@ const logger = require('../logging/WinstonLogging');
 
 const bookSchema = require('../schema/book.json').definitions.books;
 const user = require('../schema/users.json').definitions.user;
+const messageSchema = require('../schema/messages.json').definitions.messages
 const userUpdate = require('../schema/users.json').definitions.userUpdate;
 const log = logger.createLogger('Validation');
 
@@ -39,3 +40,4 @@ const makeValidator = (schema, resource) => {
 exports.validateUser = makeValidator(user, 'user');
 // exports.validateUpdate = makeValidator(userUpdate, 'userUpdate');
 exports.validateBook = makeValidator(bookSchema, 'book');
+exports.validateRequestMsg =  makeValidator(messageSchema, 'messages');

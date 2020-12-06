@@ -20,10 +20,13 @@ router.post('/respondRequest', auth, bodyParser(), respondToRequest);
 // get all of users messages
 async function respondToRequest(ctx) {
     const user =  ctx.state.user;
+    // userid // bookid 
+    // 
     const body = ctx.request.body;
     try {
+        const res = await model.respond(body);
         ctx.status = 201;
-        ctx.body = "YAT this workeds";
+        ctx.body = res;
     } catch(e) {
         log.error(e);
         ctx.status = 400;

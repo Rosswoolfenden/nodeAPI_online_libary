@@ -2,7 +2,8 @@ const mariadb = require('../database/mariaDbConnector');
 const logging = require('../logging/WinstonLogging');
 const { roles } = require('../permissons/roles');
 const log = logging.createLogger('request Model'); 
-const bookmodel =  require('../models/books');
+const bookmodel =  require('./books');
+const usermodel = require('./users')
 
 
 exports.bookRequest = async (details) => {
@@ -56,13 +57,20 @@ exports.getSent = async(details) => {
     }
 }
 
-exports.respond =  async(bookid) => {
-    const updatestatus = await book.updateStatus("on loan", bookid);
+exports.respond =  async(details) => {
+    const updatestatus = await bookmodel.updateStatus(details.bookid, "on loan");
+    console.log(updatestatus);
     if(!updatestatus.affectedRows) {
         log.error("Failed to update status");
         return;
     }
 
+    const adress = await usermodel.getAdress(details.userid);
+    if(!adress) {
+        log.error("No adress ")
+        return {Error: "No Adress available"};
+    }
+    return adress;
     // get user adress 
 
 }

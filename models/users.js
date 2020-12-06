@@ -80,7 +80,14 @@ exports.getAdress = async(userId) => {
     const query = 'SELECT * FROM users WHERE ID = ?';
     const params = [userId];
     const result = await mariadb.sqlquery(query, params);
-    return result;
+    try {
+        const adress = result[0].adress;
+        return adress
+    } catch(e) {
+        log.error("No adress for use " + userId);
+        return false;
+    }
+    
 }
 
 

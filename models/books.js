@@ -87,6 +87,7 @@ exports.updateBook = async(updatedBook, user) => {
 }
 
 exports.updateStatus = async(bookid, newStatus) => {
+    log.info(bookid);
     const query = "UPDATE books SET status = ? WHERE ID = ?";
     const params = [newStatus, bookid];
     const result =  await mariadb.sqlquery(query, params);

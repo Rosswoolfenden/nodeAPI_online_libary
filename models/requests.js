@@ -17,6 +17,7 @@ exports.bookRequest = async (details) => {
     } else {
         log.info("Book Exists");
         details.ownerId = book[0].ownerId;
+        details.ownername =book[0].firstName;
         // urn details;
     }
 
@@ -30,7 +31,6 @@ exports.bookRequest = async (details) => {
     } else {
         return;
     }
-
     // 
 }
 
@@ -73,4 +73,8 @@ exports.respond =  async(details) => {
     return adress;
     // get user adress 
 
+}
+
+exports.getChats = async(userid) => {
+    const query = "SELECT * FROM messages WHERE user"
 }

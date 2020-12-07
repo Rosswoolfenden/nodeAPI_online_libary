@@ -13,6 +13,7 @@ const router = Router({prefix: '/api/v1/requests'});
 
 router.get('/getRequests/:id([0-9]{1,})', auth, getRequests);
 router.get('/getSent/:id([0-9]{1,})', auth, getSentRequests);
+router.get('/chats', auth, getChats);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
 router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 router.post('/respondRequest', auth, bodyParser(), respondToRequest);
@@ -41,6 +42,7 @@ async function requestBook(ctx) {
     const user =  ctx.state.user;
     const requestDetails = ctx.request.body;
     requestDetails.requesterId = user.ID;
+    requestDetails.requestername = user.firstName;
     try {
         const res = await model.bookRequest(requestDetails);
         if(res) {
@@ -93,10 +95,12 @@ async function getSentRequests(ctx) {
     chatDetails.ownerId = ctx.params.id;
     chatDetails.requesterId = user.ID;
     try {
+        log.info("we are here")
         const res = await model.getSent(chatDetails);
+        console.log(res);
         if(!res) {
-            ctx.status = 400;
-            ctx.body = {Error: "Not chat available"}
+            
+            ctx.body = {Error: "Not chat yet"}
         } else {
             ctx.status = 201;
             ctx.body = res;
@@ -106,6 +110,18 @@ async function getSentRequests(ctx) {
         log.error(e);
         ctx.status = 400;
 
+    }
+}
+
+async function getChats(ctx) {
+    const user = ctx.state.user;
+    
+    try {
+        res = await model.getChats(user.ID);
+        ctx.body = res;
+    } catch(e) {
+        log.error(e);
+        ctx.status =400;
     }
 }
 

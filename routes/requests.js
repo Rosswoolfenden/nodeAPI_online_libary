@@ -43,6 +43,7 @@ async function requestBook(ctx) {
     const requestDetails = ctx.request.body;
     requestDetails.requesterId = user.ID;
     requestDetails.requestername = user.firstName;
+    requestDetails.sender_name = user.firstName;
     try {
         const res = await model.bookRequest(requestDetails);
         if(res) {
@@ -50,7 +51,7 @@ async function requestBook(ctx) {
             ctx.body = res;
         } else {
             ctx.status = 400;
-            ctx.body = {Error: "Failed to send message"}
+            ctx.body = false;
         }
         
 
@@ -70,6 +71,7 @@ async function getRequests(ctx) {
     const chatDetails ={};
     chatDetails.requesterId = ctx.params.id;
     chatDetails.ownerId = user.ID;
+    chatDetails.sender_name = user.firstName;
 
     log.info(chatDetails);
     try {
@@ -94,13 +96,11 @@ async function getSentRequests(ctx) {
     const chatDetails ={};
     chatDetails.ownerId = ctx.params.id;
     chatDetails.requesterId = user.ID;
+    chatDetails.sender_name = user.firstName;
     try {
-        log.info("we are here")
         const res = await model.getSent(chatDetails);
-        console.log(res);
         if(!res) {
-            
-            ctx.body = {Error: "Not chat yet"}
+            ctx.body = false;
         } else {
             ctx.status = 201;
             ctx.body = res;

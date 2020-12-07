@@ -8,25 +8,28 @@ const usermodel = require('./users')
 
 exports.bookRequest = async (details) => {
     // check book not on loan
-    console.log(details);
     const book = await bookmodel.getId(details.bookId);
-    console.log(book);
+    
+   
     if(!book.length) {
         log.error("Book Does not exist")
         return book;
     } else {
-        log.info("Book Exists");
+        
         details.ownerId = book[0].ownerId;
         details.ownername =book[0].firstName;
         // urn details;
     }
-
-
+    let chatId = await getChatId(details);
+    if(!chatId) {
+        log.info("no chat id - creating now");
+            await createChat(details, book[0].title);
+         chatId = await getChatId(details);
+    }
+    details.chatId = chatId;
     const query = 'INSERT INTO messages SET ?';
     const result =await mariadb.sqlquery(query, details);
-    console.log(result);
     if(result.affectedRows) {
-        log.info("Sent message ");
         return {Success: true, Message: "Book Request message sent"}
     } else {
         return;
@@ -60,7 +63,6 @@ exports.getSent = async(details) => {
 
 exports.respond =  async(details) => {
     const updatestatus = await bookmodel.updateStatus(details.bookid, "on loan");
-    console.log(updatestatus);
     if(!updatestatus.affectedRows) {
         log.error("Failed to update status");
         return;
@@ -68,7 +70,7 @@ exports.respond =  async(details) => {
 
     const adress = await usermodel.getAdress(details.userid);
     if(!adress) {
-        log.error("No adress ")
+        log.error("No adress")
         return {Error: "No Adress available"};
     }
     return adress;
@@ -76,6 +78,37 @@ exports.respond =  async(details) => {
 
 }
 
+async function getChatId(details) {
+    const query = "SELECT * FROM chats WHERE ownerId=? AND requesterId=?";
+    const res = await mariadb.sqlquery(query, [details.ownerId, details.requesterId]);
+    if(res.length === 0) {
+        return false;
+    } else {
+        return res[0].ID;
+    }
+}
+async function createChat(details, title) {
+    const newChat = {
+        ownerId: details.ownerId,
+        requesterId: details.requesterId,
+        bookId: details.bookId,
+        booktitle: title
+    }
+    const query = "INSERT INTO chats SET ?"
+    const result = await  mariadb.sqlquery(query, newChat);
+    if(result.affectedRows) {
+        return true;
+    } else{
+        return false;
+    }
+}
+
 exports.getChats = async(userid) => {
-    const query = "SELECT * FROM messages WHERE user"
+    const query = "SELECT * FROM chats WHERE ownerId=? or requesterId=?;"
+    const chats = await mariadb.sqlquery(query, [userid, userid]);
+    if(chats.length === 0 ) {
+        return false;
+    } else {
+        return chats;
+    }
 }

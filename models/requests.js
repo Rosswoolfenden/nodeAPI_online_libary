@@ -48,7 +48,8 @@ exports.getRequests = async(details) => {
 
 exports.getSent = async(details) => {
     const query = "SELECT * FROM messages WHERE requesterId = ? AND ownerId = ?";
-    const params = [details.ownerId, details.requesterId];
+    const params = [details.requesterId, details.ownerId];
+    // console.log(params)
     const result = await mariadb.sqlquery(query, params);
     if(!result.length) {
         return;

@@ -13,9 +13,13 @@ const router = Router({prefix: '/api/v1/requests'});
 
 router.get('/getRequests/:id([0-9]{1,})', auth, getRequests);
 router.get('/getSent/:id([0-9]{1,})', auth, getSentRequests);
+
+
 router.get('/chats', auth, getChats);
+router.get('/chat/:id([0-9]{1,})', auth, getChatMessages);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
-router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
+router.post('/sendmsg', auth, bodyParser(), validateRequestMsg, sendMsg);
+// router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 router.post('/respondRequest', auth, bodyParser(), respondToRequest);
 
 // get all of users messages
@@ -59,11 +63,6 @@ async function requestBook(ctx) {
         ctx.status = 400;
         log.error(e);
     }
-}
-
-async function sendMessage(ctx){
-    
-
 }
 
 async function getRequests(ctx) {
@@ -114,15 +113,42 @@ async function getSentRequests(ctx) {
 }
 
 
+async function getChatMessages(ctx) {
+    const chatId = ctx.params.id;
+    try {
+        res = await model.getChatFromId(chatId);
+        console.log(res);
+        ctx.status = 200;
+        ctx.body = res;
+
+    } catch (e) {
+        log.error(e);
+        ctx.status = 400;
+    }
+}
+
 async function getChats(ctx) {
     const user = ctx.state.user;
     
     try {
         res = await model.getChats(user.ID);
+        ctx.status = 200;
         ctx.body = res;
     } catch(e) {
         log.error(e);
         ctx.status =400;
+    }
+}
+
+async function sendMsg(){
+    const message = ctx.request.body;
+    try {
+        const res = await model.sendMsg(message);
+        ctx.status =200;
+        ctx.body = res;
+    } catch (e) {
+        log.error(e);
+        ctx.status = 400;
     }
 }
 

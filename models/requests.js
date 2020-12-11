@@ -37,6 +37,8 @@ exports.bookRequest = async (details) => {
     // 
 }
 
+
+// not used anymore
 exports.getRequests = async(details) => {
     const query = "SELECT * FROM messages WHERE ownerId = ? AND requesterId = ?";
     const params = [details.ownerId, details.requesterId];
@@ -48,7 +50,9 @@ exports.getRequests = async(details) => {
     }
 
 } 
+ 
 
+// not used anymore
 exports.getSent = async(details) => {
     const query = "SELECT * FROM messages WHERE requesterId = ? AND ownerId = ?";
     const params = [details.requesterId, details.ownerId];
@@ -60,6 +64,8 @@ exports.getSent = async(details) => {
         return result;
     }
 }
+
+
 
 exports.respond =  async(details) => {
     const updatestatus = await bookmodel.updateStatus(details.bookid, "on loan");
@@ -88,11 +94,12 @@ async function getChatId(details) {
     }
 }
 async function createChat(details, title) {
+    console.log(details);
     const newChat = {
         ownerId: details.ownerId,
         requesterId: details.requesterId,
         bookId: details.bookId,
-        booktitle: title
+        booktitle: title,
     }
     const query = "INSERT INTO chats SET ?"
     const result = await  mariadb.sqlquery(query, newChat);
@@ -101,6 +108,13 @@ async function createChat(details, title) {
     } else{
         return false;
     }
+}
+
+exports.getChatFromId = async(chatId) => {
+    const query = "SELECT * FROM messages WHERE chatid = ?";
+    const result = await mariadb.sqlquery(query, [chatId]);
+    console.log(result);
+    return result;
 }
 
 exports.getChats = async(userid) => {
@@ -112,3 +126,12 @@ exports.getChats = async(userid) => {
         return chats;
     }
 }
+
+exports.sendMsg = async(message) => {
+    const query = 'INSERT INTO messages SET ?';
+    const result = await mariadb.sqlquery(query, message);
+    return result;
+    
+   //  const chatdetails =  
+}
+

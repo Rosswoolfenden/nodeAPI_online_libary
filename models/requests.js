@@ -135,3 +135,8 @@ exports.sendMsg = async(message) => {
    //  const chatdetails =  
 }
 
+exports.getUserAdress = async(userid) => {
+    const adress = await usermodel.getAdress(userid);
+    return adress;
+}
+

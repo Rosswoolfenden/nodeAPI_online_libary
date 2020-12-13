@@ -18,11 +18,51 @@ router.get('/getSent/:id([0-9]{1,})', auth, getSentRequests);
 router.get('/chats', auth, getChats);
 router.get('/chat/:id([0-9]{1,})', auth, getChatMessages);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
-router.post('/sendmsg', auth, bodyParser(), validateRequestMsg, sendMsg);
-// router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
-router.post('/respondRequest', auth, bodyParser(), respondToRequest);
+router.post('/sendmsg', auth, bodyParser(),validateRequestMsg, sendMsg);
 
-// get all of users messages
+// router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
+router.get('/getadress/:id([0-9]{1,})', auth, adress);
+
+
+async function getChatMessages(ctx) {
+    const chatId = ctx.params.id;
+    try {
+        res = await model.getChatFromId(chatId);
+        console.log(res);
+        ctx.status = 200;
+        ctx.body = res;
+
+    } catch (e) {
+        log.error(e);
+        ctx.status = 400;
+    }
+}
+
+async function getChats(ctx) {
+    const user = ctx.state.user;
+    
+    try {
+        res = await model.getChats(user.ID);
+        ctx.status = 200;
+        ctx.body = res;
+    } catch(e) {
+        log.error(e);
+        ctx.status =400;
+    }
+}
+
+async function sendMsg(ctx){
+    const message = ctx.request.body;
+    try {
+        const res = await model.sendMsg(message);
+        ctx.status =200;
+        ctx.body = res;
+    } catch (e) {
+        log.error(e);
+        ctx.status = 400;
+    }
+}
+
 async function respondToRequest(ctx) {
     const user =  ctx.state.user;
     // userid // bookid 
@@ -39,7 +79,17 @@ async function respondToRequest(ctx) {
 
 
 }
-
+async function adress(ctx) {
+    const user = ctx.params.id;
+    try {
+        const res = model.getUserAdress(user);
+        ctx.status =200;
+        ctx.body = res;
+    } catch(e){
+        log.error(e)
+        ctx.status =400;
+    }
+}
 // DB -     chatid - bookid - userid -  message 
 
 async function requestBook(ctx) {
@@ -113,44 +163,6 @@ async function getSentRequests(ctx) {
 }
 
 
-async function getChatMessages(ctx) {
-    const chatId = ctx.params.id;
-    try {
-        res = await model.getChatFromId(chatId);
-        console.log(res);
-        ctx.status = 200;
-        ctx.body = res;
-
-    } catch (e) {
-        log.error(e);
-        ctx.status = 400;
-    }
-}
-
-async function getChats(ctx) {
-    const user = ctx.state.user;
-    
-    try {
-        res = await model.getChats(user.ID);
-        ctx.status = 200;
-        ctx.body = res;
-    } catch(e) {
-        log.error(e);
-        ctx.status =400;
-    }
-}
-
-async function sendMsg(){
-    const message = ctx.request.body;
-    try {
-        const res = await model.sendMsg(message);
-        ctx.status =200;
-        ctx.body = res;
-    } catch (e) {
-        log.error(e);
-        ctx.status = 400;
-    }
-}
 
 
 

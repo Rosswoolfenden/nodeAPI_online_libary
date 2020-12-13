@@ -16,7 +16,10 @@ router.get('/:id([0-9]{1,})', auth, getBookById);
 router.delete('/:id([0-9]{1,})', auth, deleteBook);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateBook, updateBook );
 
-
+/**
+ * 
+ * @param {Object} ctx -The koa Request/response object
+ */
 async function addBook(ctx) {
     const book = ctx.request.body;
     const user =  ctx.state.user;
@@ -29,6 +32,11 @@ async function addBook(ctx) {
     }
 }
 
+
+/**
+ * Router caller to get all books from database
+ * @param {object} ctx - The koa Request/response object 
+ */
 async function getAllBooks(ctx) {
     try {
         let res = await model.getAll();

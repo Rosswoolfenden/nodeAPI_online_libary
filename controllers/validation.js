@@ -8,6 +8,11 @@ const messageSchema = require('../schema/messages.json').definitions.messages;
 const userUpdate = require('../schema/users.json').definitions.userUpdate;
 const log = logger.createLogger('Validation');
 
+/**
+ * Makes validtor to validate data
+ * @param {JSON} schema The JSON schema needed to be followed
+ * @param {String} resource The name of the recourse
+ */
 const makeValidator = (schema, resource) => {
   const v = new Validator();
   const validationOptions = {

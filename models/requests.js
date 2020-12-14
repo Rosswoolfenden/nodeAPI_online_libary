@@ -5,7 +5,10 @@ const log = logging.createLogger('request Model');
 const bookmodel =  require('./books');
 const usermodel = require('./users')
 
-
+/**
+ * A function to request book from the database - creates chat when nesscary 
+ * @param {Object} details An object containing the request details 
+ */
 exports.bookRequest = async (details) => {
     // check book not on loan
     const book = await bookmodel.getId(details.bookId);
@@ -37,53 +40,26 @@ exports.bookRequest = async (details) => {
     // 
 }
 
-
-// not used anymore
-exports.getRequests = async(details) => {
-    const query = "SELECT * FROM messages WHERE ownerId = ? AND requesterId = ?";
-    const params = [details.ownerId, details.requesterId];
-    const result = await mariadb.sqlquery(query, params);
-    if(!result.length) {
-        return;
-    } else {
-        return result;
-    }
-
-} 
- 
-
-// not used anymore
-exports.getSent = async(details) => {
-    const query = "SELECT * FROM messages WHERE requesterId = ? AND ownerId = ?";
-    const params = [details.requesterId, details.ownerId];
-    // console.log(params)
-    const result = await mariadb.sqlquery(query, params);
-    if(!result.length) {
-        return;
-    } else {
-        return result;
-    }
-}
-
-
-
-exports.respond =  async(details) => {
-    const updatestatus = await bookmodel.updateStatus(details.bookid, "on loan");
+/**
+ * 
+ * @param {Object} details Object containing the detials of the request 
+ */
+exports.respond =  async(bookid) => {
+    const updatestatus = await bookmodel.setOnLoan(bookid);
     if(!updatestatus.affectedRows) {
+        console.log(updatestatus);
         log.error("Failed to update status");
         return;
     }
-
-    const adress = await usermodel.getAdress(details.userid);
-    if(!adress) {
-        log.error("No adress")
-        return {Error: "No Adress available"};
-    }
-    return adress;
+    return true;
     // get user adress 
 
 }
 
+/**
+ * A function to get to chat id if it exits, else returns false
+ * @param {Object} details An object of the detials of the chat 
+ */
 async function getChatId(details) {
     const query = "SELECT * FROM chats WHERE ownerId=? AND requesterId=?";
     const res = await mariadb.sqlquery(query, [details.ownerId, details.requesterId]);
@@ -93,6 +69,12 @@ async function getChatId(details) {
         return res[0].ID;
     }
 }
+
+/**
+ * A function to create a new chat for a book request
+ * @param {Object} details An object containing other details about the request
+ * @param {String} title Title of the book requested 
+ */
 async function createChat(details, title) {
     console.log(details);
     const newChat = {
@@ -110,6 +92,10 @@ async function createChat(details, title) {
     }
 }
 
+/**
+ * Function to get all messages from a given chat
+ * @param {Int} chatId int of the chat id 
+ */
 exports.getChatFromId = async(chatId) => {
     const query = "SELECT * FROM messages WHERE chatid = ?";
     const result = await mariadb.sqlquery(query, [chatId]);
@@ -117,6 +103,10 @@ exports.getChatFromId = async(chatId) => {
     return result;
 }
 
+/**
+ * Function to get 
+ * @param {Int} userid  id of the user 
+ */
 exports.getChats = async(userid) => {
     const query = "SELECT * FROM chats WHERE ownerId=? or requesterId=?;"
     const chats = await mariadb.sqlquery(query, [userid, userid]);
@@ -127,6 +117,10 @@ exports.getChats = async(userid) => {
     }
 }
 
+/**
+ * A function to insert message into databsae
+ * @param {Object} message Object containing message detisl
+ */
 exports.sendMsg = async(message) => {
     const query = 'INSERT INTO messages SET ?';
     const result = await mariadb.sqlquery(query, message);
@@ -135,6 +129,10 @@ exports.sendMsg = async(message) => {
    //  const chatdetails =  
 }
 
+/**
+ * A fucntiion to reutnr the adress of given user
+ * @param {Int} userid User indentifyer 
+ */
 exports.getUserAdress = async(userid) => {
     const adress = await usermodel.getAdress(userid);
     return adress;

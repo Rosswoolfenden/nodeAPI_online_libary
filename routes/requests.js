@@ -19,6 +19,7 @@ router.get('/chats', auth, getChats);
 router.get('/chat/:id([0-9]{1,})', auth, getChatMessages);
 router.post('/sendRequest', auth,  bodyParser(), validateRequestMsg, requestBook);
 router.post('/sendmsg', auth, bodyParser(),validateRequestMsg, sendMsg);
+router.post('/accept', auth, bodyParser(), acceptReq);
 
 // router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 router.get('/getadress/:id([0-9]{1,})', auth, adress);
@@ -78,13 +79,14 @@ async function sendMsg(ctx){
  * Unusesd
  * @param {Object} ctx - The koa Request/response object  
  */
-async function respondToRequest(ctx) {
+async function acceptReq(ctx) {
     const user =  ctx.state.user;
     // userid // bookid 
     // 
     const body = ctx.request.body;
+    console.log(body)
     try {
-        const res = await model.respond(body);
+        const res = await model.respond(body.bookId);
         ctx.status = 201;
         ctx.body = res;
     } catch(e) {

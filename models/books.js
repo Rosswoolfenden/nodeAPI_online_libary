@@ -116,6 +116,12 @@ exports.updateStatus = async(bookid, newStatus) => {
     return result;
 }
 
+exports.setOnLoan = async(bookid) => {
+    console.log(bookid);
+    const query = `UPDATE books SET status="on loan" WHERE ID=?`
+    const result  = await mariadb.sqlquery(query, [bookid]);
+    return result;
+}
 /**
  * Function to call sql query to get all books owned by a given user. 
  * @param {Int} userid Unique user identifier

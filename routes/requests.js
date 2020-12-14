@@ -23,7 +23,10 @@ router.post('/sendmsg', auth, bodyParser(),validateRequestMsg, sendMsg);
 // router.post('/sendMessage', auth, validateRequestMsg, sendMessage);
 router.get('/getadress/:id([0-9]{1,})', auth, adress);
 
-
+/**
+ * Route to get chat messages
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function getChatMessages(ctx) {
     const chatId = ctx.params.id;
     try {
@@ -38,6 +41,10 @@ async function getChatMessages(ctx) {
     }
 }
 
+/**
+ *  Route to get a list of chats
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function getChats(ctx) {
     const user = ctx.state.user;
     
@@ -51,6 +58,10 @@ async function getChats(ctx) {
     }
 }
 
+/**
+ * Route to send messafes
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function sendMsg(ctx){
     const message = ctx.request.body;
     try {
@@ -63,6 +74,10 @@ async function sendMsg(ctx){
     }
 }
 
+/**
+ * Unusesd
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function respondToRequest(ctx) {
     const user =  ctx.state.user;
     // userid // bookid 
@@ -76,9 +91,12 @@ async function respondToRequest(ctx) {
         log.error(e);
         ctx.status = 400;
     }
-
-
 }
+
+/**
+ * Route to get adress of user after they accept request
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function adress(ctx) {
     const user = ctx.params.id;
     try {
@@ -91,7 +109,10 @@ async function adress(ctx) {
     }
 }
 // DB -     chatid - bookid - userid -  message 
-
+/**
+ * Route to request boks
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function requestBook(ctx) {
     const user =  ctx.state.user;
     const requestDetails = ctx.request.body;
@@ -115,6 +136,11 @@ async function requestBook(ctx) {
     }
 }
 
+
+/**
+ * Route to get all requests
+ * @param {Object} ctx - The koa Request/response object 
+ */
 async function getRequests(ctx) {
     const user =  ctx.state.user;
     const chatDetails ={};

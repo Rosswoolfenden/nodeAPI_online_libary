@@ -11,13 +11,14 @@ const router = Router({prefix: '/api/v1/books'});
 
 router.post('/add', auth, bodyParser(), validateBook, addBook);
 router.get('/', getAllBooks);
+router.get('/mybooks', auth, getAllUserBooks);
 router.get('/:id([0-9]{1,})', auth, getBookById);
 
 router.delete('/:id([0-9]{1,})', auth, deleteBook);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateBook, updateBook );
 
 /**
- * 
+ * Router call to add book to database
  * @param {Object} ctx -The koa Request/response object
  */
 async function addBook(ctx) {
@@ -39,7 +40,8 @@ async function addBook(ctx) {
  */
 async function getAllBooks(ctx) {
     try {
-        let res = await model.getAll();
+        const res = await model.getAll();
+        ctx.status = 200;
         ctx.body = res;
 
     } catch(e){
@@ -48,7 +50,25 @@ async function getAllBooks(ctx) {
     }
 }
 
+/**
+ * Router call to get all books who are owned by user 
+ * @param {Object} ctx - The koa Request/response object 
+ */
+async function getAllUserBooks(ctx) {
+    const user = ctx.state.user;
+    try {
+        const res = await model.getUserBooks(user.ID);
+        ctx.body = res;
+    } catch(e) {
+        log.error(e);
+        ctx.status = 400;
+    }
+}
 
+/**
+ * Get Book by Id router call
+ * @param {Object} ctx - The koa Request/response object 
+ */
 async function getBookById(ctx) {
     const bookId = ctx.params.id;
     try {
@@ -60,6 +80,10 @@ async function getBookById(ctx) {
     }
 }
 
+/**
+ * Route to delte a book from the database
+ * @param {Object} ctx - The koa Request/response object 
+ */
 async function deleteBook(ctx) {
     const user = ctx.state.user;
     const book = ctx.params.id;
@@ -73,6 +97,11 @@ async function deleteBook(ctx) {
     }
 }
 
+
+/**
+ * Route to update book
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function updateBook(ctx) {
     const user =  ctx.state.user;
     const bookID = ctx.params.id;

@@ -4,6 +4,10 @@ const logging = require('../logging/WinstonLogging');
 const { roles } = require('../permissons/roles');
 const log = logging.createLogger('Book Model');
 
+/**
+ * middleware functin to send book details to be added to the databses
+ * @param {Object} book object containing the book details 
+ */
 exports.addBook = async (book) => {
     const q = 'INSERT INTO books SET ?';
     const result = await mariadb.sqlquery(q, book);
@@ -15,12 +19,18 @@ exports.addBook = async (book) => {
     }
 }
 
+/**
+ * Function to retirve all book entrys from database */
 exports.getAll = async() => {
     const q = 'SELECT * FROM books';
     const result = await mariadb.sqlquery(q, null);
     return result; 
 }
 
+/**
+ * Calls sql query function to get all books where id is equal to paramaters 
+ * @param {Int} bookId the bookid, uniqe identifer  
+ */
 exports.getId = async(bookId) => {
     const q = 'SELECT * FROM books WHERE ID = ?'
     const result = await mariadb.sqlquery(q, [bookId]);
@@ -31,6 +41,11 @@ exports.getId = async(bookId) => {
     return result;
 }
 
+/**
+ * 
+ * @param {Int} bookId Unique Book id to identify book 
+ * @param {Int} user Unique user id to identify user
+ */
 exports.delBook = async(bookId, user) => {
     const book = await this.getId(bookId);
     if(book.length != 1) {
@@ -59,7 +74,11 @@ exports.delBook = async(bookId, user) => {
     
 }
 
-
+/**
+ * Function to call sql quaery to update the selected books
+ * @param {Object} updatedBook Object containing the new values for the book    
+ * @param {Int} user The unique indetifier for users
+ */
 exports.updateBook = async(updatedBook, user) => {
     const book = await this.getId(updatedBook.ID);
     if(book.length != 1){
@@ -85,12 +104,24 @@ exports.updateBook = async(updatedBook, user) => {
         return({success: false, ID: updatedBook.ID, message: `Failed to update book ID : ${updatedBook.ID}`});
     }
 }
-
+/**
+ * A function to call the sql query to update the status of a book - to on lone, or available 
+ * @param {Int} bookid Uniuqe book identifier 
+ * @param {String} newStatus String containing the new book status - either 'on loan' or 'available'
+ */
 exports.updateStatus = async(bookid, newStatus) => {
-    log.info(bookid);
     const query = "UPDATE books SET status = ? WHERE ID = ?";
     const params = [newStatus, bookid];
     const result =  await mariadb.sqlquery(query, params);
     return result;
 }
 
+/**
+ * Function to call sql query to get all books owned by a given user. 
+ * @param {Int} userid Unique user identifier
+ */
+exports.getUserBooks = async(userid) => {
+    const query = "SELECT * FROM books WHERE ownerId = ?";
+    const result = await mariadb.sqlquery(query, [userid]);
+    return result;
+}

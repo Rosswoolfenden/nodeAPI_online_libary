@@ -17,7 +17,10 @@ router.post('/', bodyParser(), auth, login);
 router.get('/getAllUsers', auth ,getAllUsers);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUser ,updateUser);
 
-
+/**
+ * Route to register new users
+ * @param {Object} ctx - The koa Request/response object 
+ */
 async function register(ctx) {
     const body = ctx.request.body;
     try {  
@@ -36,6 +39,10 @@ async function register(ctx) {
     }
 }
 
+/**
+ * Route to log user in
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function login(ctx){
     const user = ctx.state.user;
     log.info(`${user.username} has logged in `);
@@ -43,7 +50,10 @@ async function login(ctx){
     ctx.body = {Success: true, User: user};
 }
 
-
+/**
+ * Route to get all users
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function getAllUsers(ctx) {
     try {
 
@@ -63,7 +73,10 @@ async function getAllUsers(ctx) {
     }
 }
 
-
+/**
+ * Route to remove user from database
+ * @param {Object} ctx - The koa Request/response object 
+ */
 async function removeUser(ctx) {
     const user = ctx.state.user
     const paramsID = ctx.params.id;
@@ -90,6 +103,11 @@ async function removeUser(ctx) {
     }
 }
 
+
+/**
+ * Route to update user credentials
+ * @param {Object} ctx - The koa Request/response object  
+ */
 async function updateUser(ctx) {
     const newDetails = ctx.request.body; 
     const user = ctx.state.user;

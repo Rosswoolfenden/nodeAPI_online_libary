@@ -14,7 +14,9 @@ const port = config.info.port;
 
 app.use(cors());
 
-// check the API can connect to the mariadb mysql database;
+/**
+ * Function to check database connection
+ */
 async function checkdbconnection() {
     try { 
         const dbconnect = await db.sqlquery('SELECT 1 as val', null);

@@ -7,7 +7,10 @@ const { validateUpdate } = require('../controllers/validation');
 
 const log = logging.createLogger('User Model');
 
-
+/**
+ * A Function to call the sql query to add the given user to the databse
+ * @param {Object} body An object containing the details for the new user
+ */
 exports.registerUser =  async(body) => {
     try {
        // console.log(body);
@@ -26,6 +29,10 @@ exports.registerUser =  async(body) => {
     }
 }
 
+/**
+ * A function to call sql query to delete account of the given user
+ * @param {Int} id The user id who will be deleted 
+ */
 exports.deleteUser = async(id) => {
     log.info(id);
     // no need to check if user exist, as already been authirized by passport
@@ -40,6 +47,10 @@ exports.deleteUser = async(id) => {
     }
 }
 
+/**
+ * A function to call sql query to get account detials for given user
+ * @param {String} username The username provided to find account fromd b
+ */
 exports.findByUsernmae = async(username) => {
         
     const query = 'SELECT * FROM users WHERE username = ?;';
@@ -51,13 +62,21 @@ exports.findByUsernmae = async(username) => {
             return false;
         }
 }
-
+/**
+ * Function to return all the user from the database 
+ */
 exports.getAllUsers = async() => {
     const query = 'SELECT * FROM users;'
     const result =  await mariadb.sqlquery(query, []);
     return result;
 }
 
+
+/**
+ * A function to call sql query to update given user
+ * @param {Int} id The id of the user to update
+ * @param {Object} newDetails The new details of the user
+ */
 exports.updateUser = async(id, newDetails) => {
     log.info('we are here');
     const query = 'UPDATE users SET ? WHERE ID = ?;'
@@ -76,6 +95,10 @@ exports.updateUser = async(id, newDetails) => {
     };
 }
 
+/**
+ * Function get the adress of the given user 
+ * @param {Int} userId Id of the user 
+ */
 exports.getAdress = async(userId) => {
     const query = 'SELECT * FROM users WHERE ID = ?';
     const params = [userId];
@@ -88,11 +111,4 @@ exports.getAdress = async(userId) => {
         return false;
     }
     
-}
-
-
-async function findById(id) {
-    const query = 'SELECT * FROM users WHERE id = ?'; 
-    const result = await mariadb.sqlquery(query, [id]);
-    return result;
 }

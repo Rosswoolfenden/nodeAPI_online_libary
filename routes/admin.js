@@ -9,7 +9,10 @@ const router = Router({prefix: '/api/v1/admin'});
 
 router.post('/createDatabase', createDb);
 
-
+/**
+ * A router call to create a new database - admin only;
+ * @param {Object} ctx The koa request/response object 
+ */
 async function createDb(ctx) {
     try {
         const res = model.createDatabase();

@@ -39,6 +39,7 @@ async function addBook(ctx) {
  * @param {object} ctx - The koa Request/response object 
  */
 async function getAllBooks(ctx) {
+    
     try {
         const res = await model.getAll();
         ctx.status = 200;
